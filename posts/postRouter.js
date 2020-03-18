@@ -1,21 +1,48 @@
 const express = require('express');
+const db = require('./postDb');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  // do your magic!
+  db.get()
+    .then(res2 => res.status(200).json(res2))
+    .catch(() => res.status(500).json({error: "Error retrieving posts"}));
 });
 
 router.get('/:id', (req, res) => {
-  // do your magic!
+  db.getById(req.params.id)
+    .then(res2 => {
+      if (res2) {
+        res.status(200).json(res2);
+      } else {
+        res.status(404).json({message: "No post found matching that ID"});
+      }
+    })
+    .catch(() => res.status(500).json({error: "Error retrieving post"}));
 });
 
 router.delete('/:id', (req, res) => {
-  // do your magic!
+  db.remove(req.params.id)
+    .then(res2 => {
+      if (res2 === 0) {
+        res.status(400).json({error: "No post with matching ID to delete"})
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch(() => res.status(500).json({error: "Error deleting post"}))
 });
 
-router.put('/:id', (req, res) => {
-  // do your magic!
+router.put('/:id', validatePost, (req, res) => {
+  db.update(req.params.id, req.body)
+    .then(res2 => {
+      if (res2 === 0) {
+        res.status(400).json({error: "No post with matching ID to update"})
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch(() => res.status(500).json({error: "Server error updating post"}))
 });
 
 function validatePost(req, res, next) {

@@ -14,7 +14,6 @@ server.get('/', (req, res) => {
 
 function logger(req, _, next) {
   console.log("req body: ", req.body);
-  console.log("req params: ", req.params);
   next();
 }
 

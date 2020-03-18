@@ -12,7 +12,9 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  // do your magic!
+  db.get()
+    .then(res2 => res.status(200).json(res2))
+    .catch(() => res.status(500).json({error: "Error retrieving users"}))
 });
 
 router.get('/:id', (req, res) => {
@@ -30,8 +32,6 @@ router.delete('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
   // do your magic!
 });
-
-//custom middleware
 
 function validateUserId(req, res, next) {
   if (typeof req.body === "object") {
