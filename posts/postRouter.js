@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./postDb');
+const validatePost = require("./validatePost");
 
 const router = express.Router();
 
@@ -44,17 +45,5 @@ router.put('/:id', validatePost, (req, res) => {
     })
     .catch(() => res.status(500).json({error: "Server error updating post"}))
 });
-
-function validatePost(req, res, next) {
-  if (typeof req.body === "object") {
-    if (typeof req.body.text === "string") {
-      next();
-    } else {
-      res.status(400).json({ message: "missing field required: 'text'" });
-    }
-  } else {
-    res.status(400).json({ message: "missing post data" });
-  }
-}
 
 module.exports = router;
