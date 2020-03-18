@@ -1,4 +1,5 @@
 const express = require('express');
+const db = require('./userDb');
 
 const router = express.Router();
 
@@ -33,15 +34,26 @@ router.put('/:id', (req, res) => {
 //custom middleware
 
 function validateUserId(req, res, next) {
-  // do your magic!
+  if (typeof req.body === "object") {
+    let id = req.body.id;
+    db.getById(id)
+      .then(res2 => { req.user = res2; next(); })
+      .catch(() => { res.status(200).json({ message: "invalid user id" }); })
+  } else {
+    res.status(400).json({ message: "no request body"} );
+  }
 }
 
 function validateUser(req, res, next) {
-  // do your magic!
-}
-
-function validatePost(req, res, next) {
-  // do your magic!
+  if (typeof req.body === "object") {
+    if (typeof req.body.name === "string") {
+      next();
+    } else {
+      res.status(400).json({ message: "missing field required: 'name'" });
+    }
+  } else {
+    res.status(400).json({ message: "missing user data" });
+  }
 }
 
 module.exports = router;
