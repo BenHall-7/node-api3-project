@@ -10,9 +10,9 @@ router.post('/', validateUser, (req, res) => {
     .catch(() => res.status(500).json({error: "Error creating user"}))
 });
 
-router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
-  res.status(500).json({error: "Unimplemented endpoint"});
-});
+// router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+//   res.status(500).json({error: "Unimplemented endpoint"});
+// });
 
 router.get('/', (_, res) => {
   db.get()
@@ -52,10 +52,10 @@ function validateUserId(req, res, next) {
         req.user = res2;
         next();
       } else {
-        res.status(200).json({ message: "invalid user id" });
+        res.status(400).json({ message: "invalid user id" });
       }
     })
-    .catch(() => { res.status(200).json({ message: "invalid user id" }); })
+    .catch(() => { res.status(400).json({ message: "invalid user id" }); })
 }
 
 function validateUser(req, res, next) {
